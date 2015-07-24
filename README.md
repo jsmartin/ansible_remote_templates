@@ -19,10 +19,9 @@ The Ansible template module doesn't know how to read remote sources, so I've bui
 Both solutions demonstrate the ability to fetch a single template from a public and non-public git hub repo.  
 
 
-playbooks can be run as so:
+playbooks can be run as so (assuming you have access to the private repo in the playbook, if not substitute your own):
 
 ```
-export ANSIBLE_ACTION_PLUGINS=$ANSIBLE_ACTION_PLUGINS:action_plugins/
 ansible-playbook -i hosts render_a.yml  -e 'github_access_token=mygithubaccesstoken'
 ansible-playbook -i hosts render_b.yml  -e 'github_access_token=mygithubaccesstoken'
 ```
