@@ -1,0 +1,27 @@
+- set_fact: template_dir="/tmp/ansible-{{ inventory_hostname }}-{{ 10000000000 |random() }}"
+- set_fact: template_file="template-{{ 10000000000 }}|random()"
+
+- name: create temporary dir on localhost
+  local_action:
+    module: file
+    state: directory 
+    path: "{{ template_dir }}"
+
+- name: fetching template from public source
+  local_action:
+    module: uri 
+    url: https://raw.githubusercontent.com/jsmartin/acme_app/v{{ acme_app_version }}/template.j2
+    dest: "{{ template_dir }}/{{ template_file }}"
+    headers: "{{ headers }}"
+    method: "{{ method }}"
+
+- name: render template
+  template:
+    src:  "{{ template_dir }}/{{ template_file }}"
+    dest: "{{ dest }}"
+
+- name: removed tempdir
+  local_action:
+    module: file
+    state: absent
+    path: "{{ template_dir }}"

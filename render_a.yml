@@ -1,0 +1,26 @@
+- hosts: myhosts
+  vars: 
+    foo: bar
+    mylist: [ a, b, c ]
+    app_dir: /tmp
+
+  tasks:
+
+
+  - include: tasks/get_template.yml 
+    vars:
+      url: https://raw.githubusercontent.com/jsmartin/acme_app/v{{ acme_app_version }}/template.j2 
+      dest: /tmp/{{ inventory_hostname}}-public-config
+      method: GET
+      headers: '{}'
+
+  - include: tasks/get_template.yml 
+    vars:
+      url: https://raw.githubusercontent.com/ansible/acme_app/v{{ acme_app_version }}/template.j2 
+      dest: /tmp/{{ inventory_hostname}}-private-config
+      method: POST
+      headers:
+        Accept: application/vnd.github.v3.raw
+        Authorization: token {{ github_access_token }}
+
+

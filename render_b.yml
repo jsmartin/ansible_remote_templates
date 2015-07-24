@@ -1,0 +1,21 @@
+- hosts: myhosts
+  gather_facts: yes
+  vars:
+    foo: bar
+    mylist: [a, b, c, d]
+  tasks:
+
+  - name: fetchin template from public source
+    remote_template:
+      src:  https://raw.githubusercontent.com/jsmartin/acme_app/v{{ acme_app_version }}/template.j2
+      dest: /tmp/foo-public-{{ inventory_hostname }}
+
+  - name: fetching template from secure source
+    remote_template:
+      src: https://raw.githubusercontent.com/ansible/acme_app/v{{ acme_app_version }}/template.j2
+      method: POST
+      headers:
+        Accept: application/vnd.github.v3.raw
+        Authorization: token {{ github_access_token }}
+      dest: "/tmp/foo-private-{{ inventory_hostname }}"
+
